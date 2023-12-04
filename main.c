@@ -87,7 +87,7 @@ void viewEntriesByNumber() {
 // aqui começa a implementacao da senha
 
 void salvarSenha(const char *senha) {
-  FILE *arquivo = fopen("senha.bin", "rb+");
+  FILE *arquivo = fopen("senha.bin", "wb+");
   if (arquivo != NULL) {
     fwrite(senha, sizeof(char), strlen(senha) + 1, arquivo);
     fclose(arquivo);
@@ -114,13 +114,13 @@ void atualizarSenha() {
   lerSenha(senhaCorreta);
 
   // Solicita a senha antiga ao usuário
-  printf("Digite a senha antiga: ");
+  printf("\nDigite a senha antiga: ");
   scanf("%s", senhaAntiga);
 
   // Verificar se a senha antiga está correta
   if (strcmp(senhaAntiga, senhaCorreta) == 0) {
     // Solicita a nova senha ao usuário
-    printf("Digite a nova senha: ");
+    printf("\nDigite a nova senha: ");
     scanf("%s", novaSenha);
 
     // Salva a nova senha no arquivo
@@ -135,13 +135,47 @@ void atualizarSenha() {
 
 int main() {
   FILE *pa;
-  int choice;
+  pa = fopen("senha.bin", "rb");
+  int choice, k = 1;
   char *senha = (char *)malloc(50 * sizeof(char));
+  char *pssw = (char *)malloc(50 * sizeof(char));
 
-  printf("Digite sua senha: ");
-  scanf("%s", senha);
+  if (!pa) {
+    printf("Primeira vez entrando? Digite uma senha, por favor: ");
+    scanf("%s", senha);
+    salvarSenha(senha);
+  } else {
+    while (k) {
+      printf("1. Digite a senha\n");
+      printf("2. Mudar senha\n");
+      printf("3. Sair\n");
+      scanf("%d", &choice);
 
-  salvarSenha(senha);
+      switch (choice) {
+      case 1:
+        printf("Senha: ");
+        scanf("%s", senha);
+        lerSenha(pssw);
+        if (strcmp(senha, pssw) == 0) {
+          printf("\n... Senha correta, caregando menu...\n");
+          k--;
+        } else {
+          printf("\nSenha incorreta! Tente novamente!\n");
+        }
+        break;
+
+      case 2:
+        atualizarSenha();
+        break;
+
+      case 3:
+        printf("Encerrando o programa...\n");
+        exit(0);
+      default:
+        printf("Opção inválida. Tente novamente.\n");
+      }
+    }
+  }
 
   while (1) {
     printf("\nMenu:\n");
