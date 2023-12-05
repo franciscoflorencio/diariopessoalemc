@@ -1,4 +1,4 @@
-#include "listaligada.h"
+#include "listaAdaptada.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -176,6 +176,10 @@ int main() {
       }
     }
   }
+
+  LISTA queue;
+
+  inicializarLista(&queue);
 
   while (1) {
     printf("\nMenu:\n");
